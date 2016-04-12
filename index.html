@@ -1,0 +1,35 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="css/terminal.css">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body id="body">
+<div id="topDiv">
+<pre>[<a href="#" onclick="changeFontsize(fontSize-2);return false;">&lt;&lt;</a> <a href="#" onclick="changeFontsize(fontSize+2);return false;">&gt;&gt;</a> Fontsize] </pre><pre>[<a href="#" onclick="changeShiftExecutes(1-shiftExecutes);return false;" id="aShift">Enter</a> to Execute] </pre><pre>[metamorp <a href="https://github.com/metamorp/language" id="metamorpVersion">v</a>]</pre>
+<pre id="errorMsg"></pre>
+</div>
+<div style="width:100%;height:auto;background-color:#aaa;">
+<center><div id="shuffleDiv" style="width:200px;height:200px;"><table style="width:100%;height:100%;border:0;" id='shuffleboard'></table></div></center>
+</div>
+<div id="codeDiv"></div>
+<pre style="float:right;"><a href="http://metamorp.com">http://metamorp.com</a></pre>
+</body>
+<script src="js/terminal.js"></script>
+<script src="js/gridplay.js"></script>
+<script src="js/metamorp.js"></script>
+<script>
+
+document.onkeydown = function(evt) {
+    //evt = evt || window.event;
+    if (document.activeElement.id === "body") {   
+        if (gridplay_onkeydown(evt) === false)
+            return false;
+    } else if (evt.keyCode == 27) 
+        document.activeElement.blur(); // defocus from current element
+    else if (terminal_onkeydown(evt) === false)
+        return false;     
+}; 
+
+</script>
+</html>
+

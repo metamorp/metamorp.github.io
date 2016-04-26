@@ -104,15 +104,32 @@ function addResponseLine(s, s_class) {
 };
 
 function terminal_onkeydown(evt) {
-    if (evt.keyCode == 13 && document.activeElement.getAttribute("class") === "code") {
+    var code = document.activeElement;
+    if (code.getAttribute("class") !== "code")
+        return;
+    if (evt.keyCode == 13) {
         // if we press enter on a code snippet...
         if (evt.shiftKey == shiftExecutes) {
             evt.preventDefault();
-            executeOrLineBreak(document.activeElement);
+            executeOrLineBreak(code);
             return false;
         }
-        // if desired, add tabs here.  but it will require getting to the end of the range for the caret
-        //evt.preventDefault(); 
-        //document.activeElement.innerHTML += "\nasdf";
+    } else if (evt.keyCode == 9) {  
+        evt.preventDefault();
+        var range, selection;
+        selection = window.getSelection();
+        if (selection.getRangeAt && selection.rangeCount) {
+            range = selection.getRangeAt(0);
+            range.deleteContents();
+            range.insertNode( document.createTextNode("  ") );
+        } else {
+            console.log("this probably should never trigger");
+            code.innerHTML += "  ";
+            range = document.createRange();
+            range.selectNodeContents(code);
+        }
+        range.collapse(false);
+        selection.removeAllRanges();
+        selection.addRange(range);
     }
 }

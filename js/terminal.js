@@ -85,7 +85,7 @@ function executeOrLineBreak(codeblock) {
         errorMsg.innerHTML = "parse: "+result[0];
         return;
     }
-    result = execute(result);
+    result = execute(result[1]);
     if (result[0]) {
         errorMsg.innerHTML = "execute: "+result[0];
         return;
@@ -103,33 +103,41 @@ function addResponseLine(s, s_class) {
     codeDiv.appendChild(newline);
 };
 
+function insertText(code, text) {
+    // WARNING:  code should probably be document.activeElement 
+    var range, selection;
+    selection = window.getSelection();
+    if (selection.getRangeAt && selection.rangeCount) {
+        range = selection.getRangeAt(0);
+        range.deleteContents();
+        range.insertNode( document.createTextNode(text) );
+    } else {
+        console.log("this probably should never trigger");
+        code.innerHTML += text;
+        range = document.createRange();
+        range.selectNodeContents(code);
+    }
+    range.collapse(false);
+    selection.removeAllRanges();
+    selection.addRange(range);
+}
+
 function terminal_onkeydown(evt) {
     var code = document.activeElement;
     if (code.getAttribute("class") !== "code")
         return;
     if (evt.keyCode == 13) {
         // if we press enter on a code snippet...
+        evt.preventDefault();
         if (evt.shiftKey == shiftExecutes) {
-            evt.preventDefault();
             executeOrLineBreak(code);
-            return false;
+        } else {
+            insertText(code, "\r\n"); // for windows
         }
+        return false;
     } else if (evt.keyCode == 9) {  
         evt.preventDefault();
-        var range, selection;
-        selection = window.getSelection();
-        if (selection.getRangeAt && selection.rangeCount) {
-            range = selection.getRangeAt(0);
-            range.deleteContents();
-            range.insertNode( document.createTextNode("  ") );
-        } else {
-            console.log("this probably should never trigger");
-            code.innerHTML += "  ";
-            range = document.createRange();
-            range.selectNodeContents(code);
-        }
-        range.collapse(false);
-        selection.removeAllRanges();
-        selection.addRange(range);
+        insertText(code, "  ");
+        return false;
     }
 }

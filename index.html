@@ -9,7 +9,7 @@
 <pre id="errorMsg"></pre>
 </div>
 <div style="width:100%;height:auto;background-color:#aaa;">
-<center><div id="shuffleDiv" style="width:200px;height:200px;"><table style="width:100%;height:100%;border:0;" id='shuffleboard'></table></div></center>
+<center><div id="shuffleDiv" class="unselectable" style="width:200px;height:200px;"><table style="width:100%;height:100%;border:0;" id='shuffleboard'></table></div></center>
 </div>
 <div id="codeDiv"></div>
 <pre style="float:right;"><a href="http://metamorp.com">http://metamorp.com</a></pre>
@@ -23,7 +23,7 @@ document.onkeydown = function(evt) {
     //evt = evt || window.event;
     if (document.activeElement.id === "body") {   
         if (gridplay_onkeydown(evt) === false)
-            return false;
+            return false; // don't propagate the event
     } else if (evt.keyCode == 27) 
         document.activeElement.blur(); // defocus from current element
     else if (terminal_onkeydown(evt) === false)
